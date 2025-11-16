@@ -155,4 +155,3 @@ int main()
         }
     }
 }
-double linked list. Press tab to insert.
