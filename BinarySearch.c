@@ -66,4 +66,3 @@ int main() {
 
     return 0;
 }
-double linked list. Press tab to insert.
