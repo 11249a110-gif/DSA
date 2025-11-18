@@ -1,3 +1,5 @@
+                                                            //SinglyLinkedList//
+
 //Aim:*To write a C program to implement a singly linked list with operations to insert, delete, and display elements.*//
 
 🧭 Algorithm:
