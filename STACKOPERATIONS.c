@@ -1,3 +1,5 @@
+                                                            //STACKOPERATIONS//
+
 //*Aim: To perform a stack operations using array*//
 
 🧭 Algorithm:
