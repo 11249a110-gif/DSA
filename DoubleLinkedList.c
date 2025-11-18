@@ -1,18 +1,6 @@
-🌟 AIM: To implement a Doubly Linked List and perform basic operations
-AIM:
-To create a C program that performs the following operations on a Doubly Linked List:
+                                                            //DOUBLY -LINKEDLIST//
 
-Insert a node at the beginning
-
-Insert a node at the end
-
-Insert a node at a specific position
-
-Delete a node by value
-
-Display the list in forward direction
-
-Display the list in reverse direction
+//aim:To implement a doubly linked list supporting forward/backward traversal and basic operations like insertion and deletion.//
 
 🧭 Algorithm
 Step 1: Start
@@ -82,87 +70,228 @@ Print backwards using prev pointers
 Step 9: Stop
 
 #include <stdio.h>
-#define SIZE 5   // Maximum size of the queue
+#include <stdlib.h>
 
-int queue[SIZE];
-int front = -1, rear = -1;   // Queue initially empty
+// Create node for doubly linked list
+struct Node
+{
+    int data;
+    struct Node *prev;
+    struct Node *next;
+};
 
-//------------------------------
-// ENQUEUE operation (Insert)
-//------------------------------
-void enqueue(int value) {
-
-    // Check if queue is full
-    if (rear == SIZE - 1) {
-        printf("Queue is Full!\n");
-    } 
-    else {
-
-        // If inserting the first element
-        if (front == -1) 
-            front = 0;
-
-        rear++;               // Move rear forward
-        queue[rear] = value;  // Insert value at rear
-
-        printf("Inserted %d\n", value);
+// Function to create a node
+struct Node *CreateNode(int data)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (!newNode)
+    {
+        printf("Memory allocation failed!\n");
+        return NULL;
     }
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
 }
 
-//------------------------------
-// DEQUEUE operation (Delete)
-//------------------------------
-void dequeue() {
-
-    // Check if queue is empty
-    if (front == -1 || front > rear) {
-        printf("Queue is Empty!\n");
-    } 
-    else {
-        // Print element being deleted
-        printf("Deleted %d\n", queue[front]);
-
-        front++;  // Move front forward
+// Insert at beginning
+void InsertAtBeginning(struct Node **head, int data)
+{
+    struct Node *newNode = CreateNode(data);
+    if (*head != NULL)
+    {
+        newNode->next = *head;
+        (*head)->prev = newNode;
     }
+    *head = newNode;
+    printf("Node with data %d inserted at beginning successfully.\n", data);
 }
 
-//------------------------------
-// DISPLAY operation
-//------------------------------
-void display() {
-
-    // Check if queue is empty
-    if (front == -1 || front > rear) {
-        printf("Queue is Empty!\n");
-    } 
-    else {
-        printf("Queue elements: ");
-
-        // Print from front to rear
-        for (int i = front; i <= rear; i++)
-            printf("%d ", queue[i]);
-
-        printf("\n");
+// Insert at end
+void InsertAtEnd(struct Node **head, int data)
+{
+    struct Node *newNode = CreateNode(data);
+    if (*head == NULL)
+    {
+        *head = newNode;
+        printf("Node with data %d inserted at the end successfully.\n", data);
+        return;
     }
+
+    struct Node *temp = *head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->prev = temp;
+    printf("Node with data %d inserted at the end successfully.\n", data);
 }
 
-//------------------------------
-// MAIN program execution
-//------------------------------
-int main() {
+// Insert at specific position
+void InsertAtPosition(struct Node **head, int data, int position)
+{
+    if (position < 1)
+    {
+        printf("Invalid position!\n");
+        return;
+    }
 
-    enqueue(10);  // Insert 10
-    enqueue(20);  // Insert 20
-    enqueue(30);  // Insert 30
-    display();    // Show queue
+    if (position == 1)
+    {
+        InsertAtBeginning(head, data);
+        return;
+    }
 
-    dequeue();    // Remove front element
-    display();    // Show queue after deletion
+    struct Node *temp = *head;
+    for (int i = 1; temp != NULL && i < position - 1; i++)
+        temp = temp->next;
 
-    enqueue(40);  // Insert 40
-    enqueue(50);  // Insert 50
-    enqueue(60);  // Should display full
-    display();    // Final queue display
+    if (temp == NULL)
+    {
+        printf("Given position is out of range!\n");
+        return;
+    }
 
+    struct Node *newNode = CreateNode(data);
+    newNode->next = temp->next;
+    newNode->prev = temp;
+
+    if (temp->next != NULL)
+        temp->next->prev = newNode;
+
+    temp->next = newNode;
+
+    printf("Node with data %d inserted at position %d successfully.\n", data, position);
+}
+
+// Delete a node by value
+void DeleteNode(struct Node **head, int valueToDelete)
+{
+    if (*head == NULL)
+    {
+        printf("Linked List is empty, deletion operation can't be performed.\n");
+        return;
+    }
+
+    struct Node *temp = *head;
+
+    // Find the node
+    while (temp != NULL && temp->data != valueToDelete)
+        temp = temp->next;
+
+    if (temp == NULL)
+    {
+        printf("Element %d not found.\n", valueToDelete);
+        return;
+    }
+
+    if (temp->prev != NULL)
+        temp->prev->next = temp->next;
+    else
+        *head = temp->next; // Deleting head node
+
+    if (temp->next != NULL)
+        temp->next->prev = temp->prev;
+
+    free(temp);
+    printf("Data %d deleted from list.\n", valueToDelete);
+}
+
+// Display list (forward)
+void DisplayList(struct Node *head)
+{
+    if (head == NULL)
+    {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node *temp = head;
+    printf("\nLinked List (forward): ");
+    while (temp != NULL)
+    {
+        printf("|Prev=%p|Data=%d|Next=%p| -> ", temp->prev, temp->data, temp->next);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Display list (reverse)
+void DisplayReverse(struct Node *head)
+{
+    if (head == NULL)
+    {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node *temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    printf("\nLinked List (reverse): ");
+    while (temp != NULL)
+    {
+        printf("|Prev=%p|Data=%d|Next=%p| -> ", temp->prev, temp->data, temp->next);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+// Main function
+int main()
+{
+    struct Node *head = NULL;
+    int choice, data, pos;
+
+    while (1)
+    {
+        printf("\n--- Doubly Linked List Menu ---\n");
+        printf("1. Insert at Beginning\n");
+        printf("2. Insert at End\n");
+        printf("3. Insert at Position\n");
+        printf("4. Delete by Value\n");
+        printf("5. Display List (Forward)\n");
+        printf("6. Display List (Reverse)\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter data to insert: ");
+            scanf("%d", &data);
+            InsertAtBeginning(&head, data);
+            break;
+        case 2:
+            printf("Enter data to insert: ");
+            scanf("%d", &data);
+            InsertAtEnd(&head, data);
+            break;
+        case 3:
+            printf("Enter data and position to insert: ");
+            scanf("%d %d", &data, &pos);
+            InsertAtPosition(&head, data, pos);
+            break;
+        case 4:
+            printf("Enter value to delete: ");
+            scanf("%d", &data);
+            DeleteNode(&head, data);
+            break;
+        case 5:
+            DisplayList(head);
+            break;
+        case 6:
+            DisplayReverse(head);
+            break;
+        case 7:
+            printf("Exiting...\n");
+            exit(0);
+        default:
+            printf("Invalid choice! Try again.\n");
+        }
+    }
     return 0;
 }
