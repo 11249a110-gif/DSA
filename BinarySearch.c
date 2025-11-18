@@ -1,3 +1,5 @@
+                                                                        //BINARYSEARCH//
+
 //*AIM: To find the required element in Binary Search*//
 
 🧭 Algorithm:
