@@ -1,3 +1,4 @@
+                                                                          //LINEAR SEARCH//
 //*AIM: To find the required element in linear Search*//
                                                                  
 🧭 Algorithm:  
